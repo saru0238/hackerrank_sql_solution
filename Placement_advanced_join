@@ -1,0 +1,10 @@
+select x1.name
+from (select s.id, s.name, p.salary as salary, f.friend_id
+from students s
+join packages p on p.id=s.id
+join friends f on s.id=f.id) x1
+join (select f.id, f.friend_id, p.salary as friend_salary
+from friends f
+join packages p on p.id =f.friend_id) x2 on x1.id=x2.id
+where friend_salary>salary
+order by friend_salary;
