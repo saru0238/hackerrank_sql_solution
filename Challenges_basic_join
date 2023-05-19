@@ -1,0 +1,16 @@
+WITH cte AS
+(SELECT
+    h.hacker_id,
+    h.name,
+    COUNT(c.challenge_id) AS ct,
+    COUNT(COUNT(c.challenge_id)) OVER (PARTITION BY COUNT(c.challenge_id)) AS temp
+FROM hackers h
+JOIN challenges c ON h.hacker_id = c.hacker_id
+GROUP BY
+    h.hacker_id,
+    h.name)
+
+select hacker_id, name, ct
+from cte
+where temp=1 or ct= (select max(ct) from cte)
+order by ct desc, hacker_id;
